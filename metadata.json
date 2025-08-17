@@ -1,0 +1,5 @@
+{
+  "name": "GAS Slide Data Generator",
+  "description": "An AI-powered application that analyzes unstructured text and generates a 'slideData' JavaScript object array for a Google Apps Script (GAS) framework to automate Google Slides creation.",
+  "requestFramePermissions": []
+}
