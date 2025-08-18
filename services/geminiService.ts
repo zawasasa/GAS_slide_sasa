@@ -1,13 +1,13 @@
 import { GoogleGenAI } from "@google/genai";
 import { SYSTEM_PROMPT } from '../constants';
 
-const API_KEY = process.env.API_KEY;
+const API_KEY = (import.meta as any).env?.VITE_API_KEY;
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set.");
+// Initialize AI only if API key is available
+let ai: GoogleGenAI | null = null;
+if (API_KEY) {
+  ai = new GoogleGenAI({ apiKey: API_KEY });
 }
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
 
 /**
  * Extracts the `const slideData = [...]` block from the full script text.
@@ -39,9 +39,14 @@ function extractSlideData(aiResponse: string): string {
  * @param theme The selected presentation theme.
  * @returns A promise that resolves to the generated `slideData` code as a string.
  */
-export async function generateSlideDataFromText(unstructuredText: string, theme: string): Promise<string> {
+export async function generateSlideDataFromText(unstructuredText: string, promptTheme: string, colorPalette: string, customFooterText?: string): Promise<string> {
+  if (!ai) {
+    throw new Error("VITE_API_KEY environment variable not set. Please set your Google Gemini API key in the .env file.");
+  }
+
   try {
-    const fullPrompt = `${SYSTEM_PROMPT}\n\n---\n\n## **USER_INPUT_TEXT**\n\n${unstructuredText}\n\n## **SELECTED_THEME**\n\n'${theme}'`;
+    const footerInstruction = customFooterText ? `\n\n## **CUSTOM_FOOTER_TEXT**\n\n'${customFooterText}'\n\n**重要**: 生成するslideDataの各要素に customFooterText: '${customFooterText}' プロパティを追加してください。` : '';
+    const fullPrompt = `${SYSTEM_PROMPT}\n\n---\n\n## **USER_INPUT_TEXT**\n\n${unstructuredText}\n\n## **SELECTED_PROMPT_THEME**\n\n'${promptTheme}'\n\n## **SELECTED_COLOR_PALETTE**\n\n'${colorPalette}'${footerInstruction}`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',

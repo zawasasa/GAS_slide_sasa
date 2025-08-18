@@ -13,8 +13,10 @@ interface Logo {
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
-  const [theme, setTheme] = useState('Default');
+  const [promptTheme, setPromptTheme] = useState('simple');
+  const [colorPalette, setColorPalette] = useState('simple-default');
   const [logo, setLogo] = useState<Logo | null>(null);
+  const [copyright, setCopyright] = useState('');
   
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,6 +33,9 @@ const App: React.FC = () => {
           dataUrl: reader.result as string,
         });
       };
+      reader.onerror = () => {
+        setError('ロゴファイルの読み込みに失敗しました。');
+      };
       reader.readAsDataURL(file);
     }
     event.target.value = ''; // Allow re-uploading the same file
@@ -42,7 +47,7 @@ const App: React.FC = () => {
 
   const handleGenerateCode = useCallback(async () => {
     if (!inputText.trim()) {
-      setError('Please enter some text to generate the script from.');
+      setError('スクリプトを生成するためにテキストを入力してください。');
       return;
     }
 
@@ -52,10 +57,10 @@ const App: React.FC = () => {
     setStatusMessage(''); 
 
     try {
-      setStatusMessage('Analyzing text and generating slide data...');
-      const slideDataCode = await generateSlideDataFromText(inputText, theme);
+      setStatusMessage('テキストを分析し、スライドデータを生成中...');
+      const slideDataCode = await generateSlideDataFromText(inputText, promptTheme, colorPalette, copyright);
 
-      setStatusMessage('Constructing final GAS script...');
+      setStatusMessage('最終的なGASスクリプトを構築中...');
       let fullScript = GOOGLE_TEMPLATE_BLUEPRINT.replace(
         '// SLIDEDATA_PLACEHOLDER',
         slideDataCode
@@ -65,18 +70,31 @@ const App: React.FC = () => {
         '"LOGO_BASE64_PLACEHOLDER"',
         logo ? `'${logo.dataUrl}'` : 'null'
       );
+      
+      // コピーライトテキストを置換
+      const copyrightText = copyright.trim() || `© ${new Date().getFullYear()} Your Organization`;
+      fullScript = fullScript.replace(
+        "FOOTER_TEXT: '© ' + new Date().getFullYear() + ' Your Organization'",
+        `FOOTER_TEXT: '${copyrightText.replace(/'/g, "\\'")}'`
+      );
+      
+      // 別のパターンも置換（念のため）
+      fullScript = fullScript.replace(
+        /CONFIG\.FOOTER_TEXT\s*=\s*['"][^'"]*['"]/g,
+        `CONFIG.FOOTER_TEXT = '${copyrightText.replace(/'/g, "\\'")}'`
+      );
 
       setGeneratedCode(fullScript);
-      setStatusMessage('Success! Your GAS code is ready.');
+      setStatusMessage('成功！GASコードの準備ができました。');
 
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-      setStatusMessage('Failed to generate code.');
+      setError(err instanceof Error ? err.message : '不明なエラーが発生しました。');
+      setStatusMessage('コードの生成に失敗しました。');
     } finally {
       setIsLoading(false);
     }
-  }, [inputText, theme, logo]);
+  }, [inputText, promptTheme, colorPalette, logo, copyright]);
   
   const handleReset = () => {
     setGeneratedCode(null);
@@ -92,11 +110,15 @@ const App: React.FC = () => {
           <InputArea
             text={inputText}
             setText={setInputText}
-            theme={theme}
-            setTheme={setTheme}
+            promptTheme={promptTheme}
+            setPromptTheme={setPromptTheme}
+            colorPalette={colorPalette}
+            setColorPalette={setColorPalette}
             logo={logo}
             onLogoChange={handleLogoChange}
             onLogoRemove={handleLogoRemove}
+            copyright={copyright}
+            setCopyright={setCopyright}
             isLoading={isLoading}
           />
           

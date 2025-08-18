@@ -6,6 +6,16 @@ const THEMES = [
   { name: "Business", color: "bg-gray-800" },
   { name: "Creative", color: "bg-purple-500" },
   { name: "For Kids", color: "bg-yellow-400" },
+  { name: "Professional", color: "bg-blue-600" },
+  { name: "Modern", color: "bg-indigo-500" },
+  { name: "Elegant", color: "bg-slate-600" },
+  { name: "Vibrant", color: "bg-pink-500" },
+  { name: "Nature", color: "bg-green-500" },
+  { name: "Tech", color: "bg-cyan-500" },
+  { name: "Warm", color: "bg-orange-500" },
+  { name: "Minimal", color: "bg-gray-300" },
+  { name: "Bold", color: "bg-red-500" },
+  { name: "Calm", color: "bg-teal-400" },
 ];
 
 interface ThemeSelectorProps {
@@ -16,7 +26,7 @@ interface ThemeSelectorProps {
 
 const ThemeSelector: React.FC<ThemeSelectorProps> = ({ selectedTheme, setSelectedTheme, disabled }) => {
   return (
-    <div className={`mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
+    <div className={`mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
       {THEMES.map((theme) => (
         <button
           key={theme.name}
