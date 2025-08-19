@@ -1,26 +1,19 @@
 import { marked } from 'marked';
-import * as pdfjsLib from 'pdfjs-dist';
-
-// PDF.js Worker設定
-if (typeof window !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-}
 
 export interface FileContent {
   content: string;
   fileName: string;
-  fileType: 'text' | 'markdown' | 'pdf';
+  fileType: 'text' | 'markdown';
 }
 
 export const SUPPORTED_FORMATS = {
   text: ['.txt'],
-  markdown: ['.md', '.markdown'],
-  pdf: ['.pdf']
+  markdown: ['.md', '.markdown']
 };
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-export function getFileType(fileName: string): 'text' | 'markdown' | 'pdf' | null {
+export function getFileType(fileName: string): 'text' | 'markdown' | null {
   const extension = fileName.toLowerCase().substring(fileName.lastIndexOf('.'));
   
   if (SUPPORTED_FORMATS.text.includes(extension)) {
@@ -29,10 +22,6 @@ export function getFileType(fileName: string): 'text' | 'markdown' | 'pdf' | nul
   
   if (SUPPORTED_FORMATS.markdown.includes(extension)) {
     return 'markdown';
-  }
-  
-  if (SUPPORTED_FORMATS.pdf.includes(extension)) {
-    return 'pdf';
   }
   
   return null;
@@ -52,7 +41,7 @@ export function validateFile(file: File): { isValid: boolean; error?: string } {
   if (!fileType) {
     return { 
       isValid: false, 
-      error: 'サポートされていないファイル形式です。.txt、.md、または .pdf ファイルを選択してください。' 
+      error: 'サポートされていないファイル形式です。.txt または .md ファイルを選択してください。' 
     };
   }
   
@@ -114,48 +103,6 @@ export async function processMarkdownFile(file: File): Promise<FileContent> {
   });
 }
 
-export async function processPdfFile(file: File): Promise<FileContent> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    
-    reader.onload = async (e) => {
-      try {
-        const arrayBuffer = e.target?.result as ArrayBuffer;
-        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-        
-        let fullText = '';
-        
-        // 各ページのテキストを抽出
-        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-          const page = await pdf.getPage(pageNum);
-          const textContent = await page.getTextContent();
-          
-          // テキスト要素を結合
-          const pageText = textContent.items
-            .map((item: any) => item.str)
-            .join(' ');
-          
-          fullText += pageText + '\n\n';
-        }
-        
-        resolve({
-          content: fullText.trim(),
-          fileName: file.name,
-          fileType: 'pdf'
-        });
-      } catch (error) {
-        reject(new Error('PDFファイルの処理に失敗しました。'));
-      }
-    };
-    
-    reader.onerror = () => {
-      reject(new Error('ファイルの読み込みに失敗しました。'));
-    };
-    
-    reader.readAsArrayBuffer(file);
-  });
-}
-
 export async function processFile(file: File): Promise<FileContent> {
   const validation = validateFile(file);
   if (!validation.isValid) {
@@ -169,8 +116,6 @@ export async function processFile(file: File): Promise<FileContent> {
       return processTextFile(file);
     case 'markdown':
       return processMarkdownFile(file);
-    case 'pdf':
-      return processPdfFile(file);
     default:
       throw new Error('サポートされていないファイル形式です。');
   }

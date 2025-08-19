@@ -11,8 +11,6 @@
   "dependencies": {
     "@google/genai": "^1.14.0",
     "marked": "^16.1.2",
-    "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "^5.4.54",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

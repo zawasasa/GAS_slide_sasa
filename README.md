@@ -17,9 +17,16 @@ AIを使ってGoogleスライドを自動生成するGoogle Apps Script（GAS）
 - 🎨 **10種類のカラーパレット**: シンプルからビビッドまで多彩なデザイン
 - 📝 **4つのプロンプトテーマ**: シンプル、ビジネス、クリエイティブ、子供向け
 - 🖼️ **ロゴアップロード**: PNGやJPEG形式のロゴを追加可能
-- 📄 **PDFファイル対応**: PDFからテキストを抽出してスライド生成
 - 🎯 **カスタムフッター**: 独自のコピーライトテキストを設定
 - 📚 **ステップバイステップガイド**: 初心者でも簡単に使える詳細な手順
+
+## 🎥 デモ動画
+
+使い方の詳細は以下のデモ動画をご覧ください：
+
+**[📺 操作方法デモ動画を見る](https://www.canva.com/design/DAGwYpxyIVI/KaFbAUM9FeosRxTmXnjElw/watch?utm_content=DAGwYpxyIVI&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hae8cf46e59)**
+
+実際の操作手順がステップバイステップで確認できます。
 
 ## 🚀 クイックスタート
 
@@ -28,7 +35,7 @@ AIを使ってGoogleスライドを自動生成するGoogle Apps Script（GAS）
 
 ### 2. コンテンツを入力
 - テキストを直接入力
-- または PDFファイルをアップロード
+- またはMarkdown/テキストファイルをアップロード
 
 ### 3. テーマを選択
 - **プロンプトテーマ**: 言葉遣いとトーンを選択
@@ -83,7 +90,6 @@ npm run lint     # ESLintチェック（設定されている場合）
 - **ビルドツール**: Vite
 - **AI**: Google Gemini API
 - **デプロイ**: Vercel
-- **PDF処理**: PDF.js
 
 ## 📖 詳細ドキュメント
 
