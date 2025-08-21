@@ -16,7 +16,7 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center space-x-2 text-sm text-gray-600">
-          <span>プロンプト作成者:</span>
+          <span>プロンプト Thanks:</span>
           <a
             href="https://x.com/Majin_AppSheet"
             target="_blank"

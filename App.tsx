@@ -13,6 +13,7 @@ interface Logo {
 
 const App: React.FC = () => {
   const [inputText, setInputText] = useState('');
+  const [htmlContent, setHtmlContent] = useState<string | null>(null); // 画像付きMDファイルのHTMLコンテンツ
   const [promptTheme, setPromptTheme] = useState('simple');
   const [colorPalette, setColorPalette] = useState('simple-default');
   const [logo, setLogo] = useState<Logo | null>(null);
@@ -45,8 +46,15 @@ const App: React.FC = () => {
     setLogo(null);
   };
 
+  const handleHtmlContent = (content: string) => {
+    setHtmlContent(content);
+  };
+
   const handleGenerateCode = useCallback(async () => {
-    if (!inputText.trim()) {
+    // HTMLコンテンツが利用可能な場合はそれを使用、そうでなければテキストを使用
+    const contentToProcess = htmlContent || inputText;
+    
+    if (!contentToProcess.trim()) {
       setError('スクリプトを生成するためにテキストを入力してください。');
       return;
     }
@@ -58,7 +66,7 @@ const App: React.FC = () => {
 
     try {
       setStatusMessage('テキストを分析し、スライドデータを生成中...');
-      const slideDataCode = await generateSlideDataFromText(inputText, promptTheme, colorPalette, copyright);
+      const slideDataCode = await generateSlideDataFromText(contentToProcess, promptTheme, colorPalette, copyright);
 
       setStatusMessage('最終的なGASスクリプトを構築中...');
       let fullScript = GOOGLE_TEMPLATE_BLUEPRINT.replace(
@@ -94,12 +102,13 @@ const App: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [inputText, promptTheme, colorPalette, logo, copyright]);
+  }, [inputText, htmlContent, promptTheme, colorPalette, logo, copyright]);
   
   const handleReset = () => {
     setGeneratedCode(null);
     setError(null);
     setStatusMessage('');
+    setHtmlContent(null); // HTMLコンテンツもリセット
   };
 
   return (
@@ -120,6 +129,7 @@ const App: React.FC = () => {
             copyright={copyright}
             setCopyright={setCopyright}
             isLoading={isLoading}
+            onHtmlContent={handleHtmlContent}
           />
           
           <div className="w-full lg:sticky lg:top-8">
@@ -130,7 +140,7 @@ const App: React.FC = () => {
               generatedCode={generatedCode}
               onGenerate={handleGenerateCode}
               onReset={handleReset}
-              isReadyToCreate={!!inputText.trim()}
+              isReadyToCreate={!!(inputText.trim() || htmlContent)}
             />
           </div>
         </div>

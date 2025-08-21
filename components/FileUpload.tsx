@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { processFile, FileContent, SUPPORTED_FORMATS } from '../utils/fileProcessor';
 
 interface FileUploadProps {
-  onFileContent: (content: string, fileName: string) => void;
+  onFileContent: (content: string, fileName: string, htmlContent?: string, hasImages?: boolean) => void;
   className?: string;
 }
 
@@ -18,7 +18,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileContent, className
 
     try {
       const fileContent = await processFile(file);
-      onFileContent(fileContent.content, fileContent.fileName);
+      onFileContent(fileContent.content, fileContent.fileName, fileContent.htmlContent, fileContent.hasImages);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'ファイルの処理に失敗しました。');
     } finally {
@@ -111,9 +111,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({ onFileContent, className
                 </span>
                 {' '}またはドラッグ&ドロップ
               </div>
-              <p className="text-xs text-gray-500">
-                対応形式: {supportedFormatsText} (最大5MB)
-              </p>
+              <div className="space-y-1">
+                <p className="text-xs text-gray-500">
+                  対応形式: {supportedFormatsText} (最大5MB)
+                </p>
+                <p className="text-xs text-blue-600 font-medium">
+                  📝 画像付きコンテンツには.mdファイルがおすすめ
+                </p>
+              </div>
             </>
           )}
         </div>

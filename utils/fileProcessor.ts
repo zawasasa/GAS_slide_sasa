@@ -4,6 +4,8 @@ export interface FileContent {
   content: string;
   fileName: string;
   fileType: 'text' | 'markdown';
+  htmlContent?: string; // Markdownファイルの場合のHTML形式のコンテンツ
+  hasImages?: boolean; // 画像が含まれているかどうか
 }
 
 export const SUPPORTED_FORMATS = {
@@ -77,10 +79,13 @@ export async function processMarkdownFile(file: File): Promise<FileContent> {
       const markdownContent = e.target?.result as string;
       
       try {
-        // MarkdownをHTMLに変換してからテキストを抽出
+        // MarkdownをHTMLに変換
         const htmlContent = marked.parse(markdownContent) as string;
         
-        // HTMLタグを除去してプレーンテキストに変換
+        // 画像が含まれているかチェック
+        const hasImages = /<img[^>]+>/i.test(htmlContent) || /!\[.*?\]\(.*?\)/i.test(markdownContent);
+        
+        // HTMLタグを除去してプレーンテキストに変換（後方互換性のため）
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = htmlContent;
         const plainText = tempDiv.textContent || tempDiv.innerText || '';
@@ -88,7 +93,9 @@ export async function processMarkdownFile(file: File): Promise<FileContent> {
         resolve({
           content: plainText,
           fileName: file.name,
-          fileType: 'markdown'
+          fileType: 'markdown',
+          htmlContent: htmlContent,
+          hasImages: hasImages
         });
       } catch (error) {
         reject(new Error('Markdownファイルの処理に失敗しました。'));
