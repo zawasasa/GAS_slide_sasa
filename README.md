@@ -14,10 +14,12 @@ AIを使ってGoogleスライドを自動生成するGoogle Apps Script（GAS）
 ## ✨ 主な機能
 
 - 🤖 **AI自動生成**: Gemini AIを使用してテキストからスライドを自動生成
+- 📸 **画像付きスライド対応**: [Obsidian Web Clipper](https://chromewebstore.google.com/detail/obsidian-web-clipper/cnjifjpddelmedmihgijeibhnjfabmlf?hl=ja)で保存したMarkdownファイルから画像付きスライドを自動生成
 - 🎨 **10種類のカラーパレット**: シンプルからビビッドまで多彩なデザイン
 - 📝 **4つのプロンプトテーマ**: シンプル、ビジネス、クリエイティブ、子供向け
 - 🖼️ **ロゴアップロード**: PNGやJPEG形式のロゴを追加可能
 - 🎯 **カスタムフッター**: 独自のコピーライトテキストを設定
+- 💡 **インタラクティブなTips**: おすすめの使い方をトグル表示で分かりやすく説明
 - 📚 **ステップバイステップガイド**: 初心者でも簡単に使える詳細な手順
 
 ## 🎥 デモ動画
@@ -28,6 +30,30 @@ AIを使ってGoogleスライドを自動生成するGoogle Apps Script（GAS）
 
 実際の操作手順がステップバイステップで確認できます。
 
+## 🆕 NEW! Obsidian Web Clipper対応
+
+### 📸 画像付きスライドを簡単作成
+
+[Obsidian Web Clipper](https://chromewebstore.google.com/detail/obsidian-web-clipper/cnjifjpddelmedmihgijeibhnjfabmlf?hl=ja)で保存したWebページを使って、画像付きのスライドショーを自動生成できるようになりました！
+
+#### ✨ 特徴
+- **🎯 ワンクリック変換**: Web記事 → Obsidian Web Clipper → このアプリ → 完成！
+- **📷 画像自動検出**: 画像リンクを含むMarkdownファイルを自動識別
+- **🎨 美しいUI**: 画像付きファイル検出時の視覚的フィードバック
+- **💡 使い方ガイド**: トグル式のおすすめ使用方法を搭載
+
+#### ⚠️ 重要な注意事項
+- 画像レイアウトは生成後にGoogleスライドで手動調整が必要です
+- 不要な画像は出力後にGoogleスライド上で削除してください
+- Obsidian Web Clipperは画像リンクを保存しますが、元ページが削除されると画像が表示されなくなります
+
+#### 🚀 使用手順
+1. [Obsidian Web Clipper](https://chromewebstore.google.com/detail/obsidian-web-clipper/cnjifjpddelmedmihgijeibhnjfabmlf?hl=ja)をChromeにインストール
+2. 気になるWeb記事でObsidian Web Clipperを使用してMarkdownファイルを保存
+3. このアプリに保存したMarkdownファイルをアップロード
+4. 「🎉 画像付きMarkdownファイルを検出しました！」の通知を確認
+5. GASコードを生成して、画像付きスライドショーを作成
+
 ## 🚀 クイックスタート
 
 ### 1. アプリにアクセス
@@ -36,6 +62,7 @@ AIを使ってGoogleスライドを自動生成するGoogle Apps Script（GAS）
 ### 2. コンテンツを入力
 - テキストを直接入力
 - またはMarkdown/テキストファイルをアップロード
+- 🆕 **画像付きコンテンツ**: [Obsidian Web Clipper](https://chromewebstore.google.com/detail/obsidian-web-clipper/cnjifjpddelmedmihgijeibhnjfabmlf?hl=ja)で保存したMarkdownファイルをアップロードすると、画像も含むスライドを自動生成
 
 ### 3. テーマを選択
 - **プロンプトテーマ**: 言葉遣いとトーンを選択
@@ -125,6 +152,25 @@ npm run lint     # ESLintチェック（設定されている場合）
 ## 🐛 バグ報告・要望
 
 バグの報告や新機能の要望は、[GitHub Issues](https://github.com/zawasasa/GAS_slide_sasa/issues) でお気軽にお知らせください。
+
+## 📝 更新履歴
+
+### v2.0.0 (2025-08-21) - Obsidian Web Clipper対応
+- 🆕 **画像付きMarkdownファイル対応**: Obsidian Web Clipperで保存したファイルから画像付きスライドを自動生成
+- 🎨 **UI/UX大幅改善**: 
+  - トグル式の「おすすめの使い方」ガイドを追加
+  - 画像検出時の視覚的フィードバック強化
+  - ファイルアップロード部分にMDファイル推奨メッセージを追加
+- 🔗 **Obsidian Web Clipperリンク**: Chrome Web Storeへの直接リンクを複数箇所に設置
+- ⚠️ **注意事項表示**: 画像レイアウト調整と不要画像削除の案内を追加
+- 🙏 **クレジット更新**: 「プロンプト Thanks: まじん｜AI × Google」に表記変更
+- 🧪 **テスト環境**: 画像付きMarkdownファイルのサンプル追加
+
+### v1.0.0 (2024-12) - 初回リリース
+- 🤖 基本的なAI スライド生成機能
+- 🎨 カラーパレット・プロンプトテーマ選択機能
+- 🖼️ ロゴアップロード機能
+- 📝 Markdown/テキストファイル対応
 
 ---
 
